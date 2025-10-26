@@ -47,6 +47,17 @@ def main():
                 return
         for entity in drawable:
                 entity.draw(screen)
+        for shot in shots:
+            for asteroid in asteroids:
+                if shot.collides_with(asteroid):
+                    new_asteroids = asteroid.split()
+                    asteroid.kill()
+                    if new_asteroids is not None:
+                        for new_asteroid in new_asteroids:
+                            asteroids.add(new_asteroid)
+                            drawable.add(new_asteroid)
+                            updateable.add(new_asteroid)
+                    shot.kill()
             
         pygame.display.flip()
         
