@@ -20,17 +20,22 @@ class Player(CircleShape):
     def draw(self, screen):
         pygame.draw.polygon(screen, (255, 255, 255), self.triangle(), 2)
 
+    def rotate(self, dt):
+        self.rotation += PLAYER_TURN_SPEED * dt
+        self.rotation %= 360 # keep rotation within 0-359 degrees
+        
+    def move(self, dt):
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        self.position += forward * PLAYER_SPEED * dt
+        
     def update(self, dt):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.position.x -= 200 * dt
-        if keys[pygame.K_RIGHT]:
-            self.position.x += 200 * dt
-        if keys[pygame.K_UP]:
-            self.position.y -= 200 * dt
-        if keys[pygame.K_DOWN]:
-            self.position.y += 200 * dt
 
-        # Keep player within screen bounds
-        self.position.x = max(self.radius, min(SCREEN_WIDTH - self.radius, self.position.x))
-        self.position.y = max(self.radius, min(SCREEN_HEIGHT - self.radius, self.position.y))
+        if keys[pygame.K_a]:
+            self.rotate(-dt)
+        if keys[pygame.K_d]:
+            self.rotate(dt)
+        if keys[pygame.K_w]:
+            self.move(dt)
+        if keys[pygame.K_s]:
+            self.move(-dt)
